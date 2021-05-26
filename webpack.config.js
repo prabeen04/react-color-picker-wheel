@@ -1,38 +1,35 @@
-const path = require('path');
+const path = require("path");
 
 module.exports = {
-  mode: 'production',
-  entry: './src/ColorPicker.js',
+  mode: "production",
+  entry: "./src/ColorPicker.js",
   output: {
-    path: path.resolve('lib'),
-    filename: 'ColorPicker.js',
-    libraryTarget: 'commonjs2',
+    path: path.resolve("lib"),
+    filename: "ColorPicker.js",
+    libraryTarget: "commonjs2",
   },
   module: {
     rules: [
       {
         test: /\.js?$/,
         exclude: /(node_modules)/,
-        use: 'babel-loader',
+        use: "babel-loader",
       },
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader'
-        ]
+        use: ["style-loader", "css-loader"],
       },
       {
         test: /\.svg/,
-        use: "svg-url-loader"
-      }
+        use: "svg-url-loader",
+      },
     ],
   },
   resolve: {
     alias: {
-      'react': path.resolve(__dirname, './node_modules/react'),
-      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
-    }
+      react: path.resolve(__dirname, "./node_modules/react"),
+      "react-dom": path.resolve(__dirname, "./node_modules/react-dom"),
+    },
   },
   externals: {
     // Don't bundle react or react-dom
@@ -40,13 +37,13 @@ module.exports = {
       commonjs: "react",
       commonjs2: "react",
       amd: "React",
-      root: "React"
+      root: "React",
     },
     "react-dom": {
       commonjs: "react-dom",
       commonjs2: "react-dom",
       amd: "ReactDOM",
-      root: "ReactDOM"
-    }
-  }
+      root: "ReactDOM",
+    },
+  },
 };
