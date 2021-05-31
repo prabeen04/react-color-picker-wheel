@@ -69,7 +69,7 @@ const ColorWheel = ({ color, size, setColor }) => {
         onMouseDown={onMouseDown}
         role="button"
         tabIndex={-5}
-        style={{ margin: `0 ${size / 10}px` }}
+        // style={{ margin: `0 ${size / 10}px` }}
       >
         <div
           className="handle"

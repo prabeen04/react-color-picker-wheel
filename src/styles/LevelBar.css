@@ -1,16 +1,17 @@
-.defaultHandle{
-    position: absolute;
-    box-sizing: border-box;
-    background-color: white;
-    border-radius: 100%;
-    transform: translate(0,-50%);
+.defaultHandle {
+  position: absolute;
+  box-sizing: border-box;
+  background-color: white;
+  border-radius: 100%;
+  /* transform: translate(0,-50%); */
 }
 
-.barBackground{
-    height: 90%;
-    width: 100%;
-    mask-image: url('../assets/mask.svg');
-    -webkit-mask-image: url('../assets/mask.svg');
-    mask-size: contain;
-    -webkit-mask-size: contain;
+.barBackground {
+  height: 90%;
+  width: 100%;
+  /* transform: rotate(90deg); */
+  /* mask-image: url("../assets/mask-svg3.svg");
+  -webkit-mask-image: url("../assets/mask-svg3.svg");
+  mask-size: cover;
+  -webkit-mask-size: cover; */
 }

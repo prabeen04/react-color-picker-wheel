@@ -45,6 +45,7 @@
     "react": "16.13.1"
   },
   "scripts": {
+    "start": "webpack --watch",
     "build": "webpack",
     "lint": "eslint src"
   },

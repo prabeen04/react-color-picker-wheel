@@ -3,6 +3,7 @@ import "./styles/ColorPicker.css";
 import PropTypes from "prop-types";
 import ColorWheel from "./ColorWheel";
 import { hexToRGB, hslToRgb, rgbToHex, rgbToHsl } from "./helpers/utils";
+import LevelBar from "./LevelBar";
 
 const ColorPicker = ({ size, initialColor, onChange }) => {
   const [pickedColor, setPickedColor] = useState({
@@ -33,10 +34,11 @@ const ColorPicker = ({ size, initialColor, onChange }) => {
         hsl: { h: 0, s: 100, l: 50 },
       });
     }
-  }, []);
+  }, [initialColor]);
 
   const setColorFromWheel = useCallback(
     (hsl) => {
+      // console.log({ hsl });
       const h = parseFloat(
         (hsl.h === undefined ? pickedColor.hsl.h : hsl.h).toFixed(2)
       );
@@ -65,28 +67,18 @@ const ColorPicker = ({ size, initialColor, onChange }) => {
       >
         <ColorWheel
           color={pickedColor.hsl}
-          size={size * (5 / 6)}
+          size={size}
           setColor={setColorFromWheel}
         />
-        {/* <div className="pickedColorContainer">
-          <div
-            className="pickedColor"
-            style={{
-              backgroundColor: pickedColor.hex,
-            }}
-          >
-            <div
-              className="hexValue"
-              style={{
-                fontSize: size / 12,
-                color: pickedColor.hsl.l > 70 ? 'black' : 'white',
-              }}
-            >
-              {pickedColor.hex}
-            </div>
-          </div>
-        </div> */}
       </div>
+      <LevelBar
+        alignRight
+        className="lightnessBar"
+        size={size}
+        background={`linear-gradient(to right, white,hsl(${pickedColor.hsl.h},${pickedColor.hsl.s}%,50%), black)`}
+        onChange={(lightness) => setColorFromWheel({ l: lightness })}
+        value={pickedColor.hsl.l}
+      />
     </div>
   );
 };
