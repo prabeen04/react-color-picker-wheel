@@ -92,7 +92,7 @@ ColorPicker.propTypes = {
   ]),
   /** Function which will be called when color change occurs. Parameter is a hsl object */
   onChange: PropTypes.func,
-  actionRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
+  actionRef: PropTypes.shape({ current: PropTypes.any }),
   controlers: PropTypes.shape({
     saturationControler: PropTypes.bool,
     lightnessControler: PropTypes.bool,
