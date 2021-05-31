@@ -1,7 +1,11 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import PropTypes from "prop-types";
 import "./styles/ColorWheel.css";
-import { coordinatesToHS, hsToCoordinates } from "./helpers/utils";
+import {
+  coordinatesToHS,
+  getXYCordFromTouch,
+  hsToCoordinates,
+} from "./helpers/utils";
 import LevelBar from "./LevelBar";
 
 const ColorWheel = ({ color, size, setColor }) => {
@@ -20,25 +24,38 @@ const ColorWheel = ({ color, size, setColor }) => {
     };
 
     const mouseMove = (event) => {
-      if (editingRef.current) {
-        const color = coordinatesToHS(
-          (event.clientX - wheelRef.current.getBoundingClientRect().x) / size,
-          (event.clientY - wheelRef.current.getBoundingClientRect().y) / size
-        );
-        setColor(color);
+      if (!editingRef.current) {
+        return;
       }
+
+      const cord = getXYCordFromTouch(event);
+      const color = coordinatesToHS(
+        (cord.clientX - wheelRef.current.getBoundingClientRect().x) / size,
+        (cord.clientY - wheelRef.current.getBoundingClientRect().y) / size
+      );
+      setColor(color);
     };
 
     const target = wheelRef.current;
 
-    target.addEventListener("mousemove", mouseMove);
     target.addEventListener("mousedown", mouseDown);
+    target.addEventListener("touchstart", mouseDown);
+
+    target.addEventListener("mousemove", mouseMove);
+    target.addEventListener("touchmove", mouseMove);
+    
     window.addEventListener("mouseup", mouseUp);
+    window.addEventListener("touchend", mouseUp);
 
     return () => {
       target.removeEventListener("mousedown", mouseDown);
+      target.removeEventListener("touchstart", mouseDown);
+
       target.removeEventListener("mousemove", mouseMove);
+      target.removeEventListener("touchmove", mouseMove);
+
       window.removeEventListener("mouseup", mouseUp);
+      window.removeEventListener("touchend", mouseUp);
     };
   }, [size]);
 

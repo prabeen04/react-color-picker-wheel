@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import PropTypes from "prop-types";
 import "./styles/LevelBar.css";
+import { getXYCordFromTouch } from "./helpers/utils";
 
 const LevelBar = ({
   className,
@@ -20,12 +21,14 @@ const LevelBar = ({
     };
 
     const mouseMove = (event) => {
-      if (editingRef.current) {
-        const yDifference =
-          event.clientX - barRef.current.getBoundingClientRect().x;
-        const s = (1 - Math.min(size, Math.max(0, yDifference)) / size) * 100;
-        onChange(parseFloat(s.toFixed(2)));
+      if (!editingRef.current) {
+        return;
       }
+      const yDifference =
+        getXYCordFromTouch(event).clientX -
+        barRef.current.getBoundingClientRect().x;
+      const s = (1 - Math.min(size, Math.max(0, yDifference)) / size) * 100;
+      onChange(parseFloat(s.toFixed(2)));
     };
     const mouseUp = () => {
       editingRef.current = false;
@@ -34,13 +37,23 @@ const LevelBar = ({
     const target = barRef.current;
 
     target.addEventListener("mousedown", mouseDown);
+    target.addEventListener("touchstart", mouseDown);
+
     target.addEventListener("mousemove", mouseMove);
+    target.addEventListener("touchmove", mouseMove);
+
     window.addEventListener("mouseup", mouseUp);
+    window.addEventListener("touchend", mouseUp);
 
     return () => {
       target.removeEventListener("mousedown", mouseDown);
+      target.removeEventListener("touchstart", mouseDown);
+
       target.removeEventListener("mousemove", mouseMove);
+      target.removeEventListener("touchmove", mouseMove);
+
       window.removeEventListener("mouseup", mouseUp);
+      window.removeEventListener("touchend", mouseUp);
     };
   }, [size]);
 
@@ -71,6 +84,7 @@ const LevelBar = ({
           width: size * 0.05,
           height: size * 0.05,
           border: `${size * 0.005}px solid black`,
+          transform: "translate(-50%, -50%)",
         }}
       />
     </div>

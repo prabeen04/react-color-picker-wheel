@@ -141,3 +141,17 @@ export const hslToRgb = (h, s, l) => {
 
   return { r, g, b };
 };
+
+export function getXYCordFromTouch(event) {
+  if (event.touches && event.touches[0]) {
+    return {
+      clientX: event.touches[0].clientX,
+      clientY: event.touches[0].clientY,
+    };
+  }
+
+  return {
+    clientX: event.clientX,
+    clientY: event.clientY,
+  };
+}
