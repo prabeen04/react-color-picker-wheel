@@ -12,17 +12,48 @@ export const coordinatesToHS = (x, y) => {
   return { h, s };
 };
 
-export const hexToRGB = hex => {
+export const hexToRGB = (hex) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-  return result ? {
-    r: parseInt(result[1], 16),
-    g: parseInt(result[2], 16),
-    b: parseInt(result[3], 16),
-  } : null;
+  return result
+    ? {
+        r: parseInt(result[1], 16),
+        g: parseInt(result[2], 16),
+        b: parseInt(result[3], 16),
+      }
+    : null;
 };
 
+export function convertToStdColorFormat(color) {
+  if (isHexColor(color)) {
+    const hex = color.toUpperCase();
+    const rgb = hexToRGB(color);
+    const hsl = rgbToHsl(rgb.r, rgb.g, rgb.b);
+    return { hex, rgb, hsl };
+  }
+  if (isRgbColor(color)) {
+    const hex = rgbToHex(color.r, color.g, color.b);
+    const rgb = color;
+    const hsl = rgbToHsl(color.r, color.g, color.b);
+    return { hex, rgb, hsl };
+  }
+
+  throw new Error(`given ${color} format is not supported.`);
+}
+
+function isHexColor(color) {
+  return /^#[0-9A-F]{6}$/i.test(color);
+}
+
+function isRgbColor(color) {
+  return (
+    Number.isInteger(color.r) &&
+    Number.isInteger(color.g) &&
+    Number.isInteger(color.b)
+  );
+}
+
 export const rgbToHex = (r, g, b) => {
-  const componentToHex = c => {
+  const componentToHex = (c) => {
     const hex = c.toString(16).toUpperCase();
     return hex.length === 1 ? `0${hex}` : hex;
   };
@@ -43,9 +74,15 @@ export const rgbToHsl = (r, g, b) => {
     const d = max - min;
     s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
     switch (max) {
-      case red: h = (green - blue) / d + (green < blue ? 6 : 0); break;
-      case green: h = (blue - red) / d + 2; break;
-      case blue: h = (red - green) / d + 4; break;
+      case red:
+        h = (green - blue) / d + (green < blue ? 6 : 0);
+        break;
+      case green:
+        h = (blue - red) / d + 2;
+        break;
+      case blue:
+        h = (red - green) / d + 4;
+        break;
       default:
     }
   }
@@ -74,17 +111,29 @@ export const hslToRgb = (h, s, l) => {
   let b = 0;
 
   if (h >= 0 && h < 60) {
-    r = c; g = x; b = 0;
+    r = c;
+    g = x;
+    b = 0;
   } else if (h >= 60 && h < 120) {
-    r = x; g = c; b = 0;
+    r = x;
+    g = c;
+    b = 0;
   } else if (h >= 120 && h < 180) {
-    r = 0; g = c; b = x;
+    r = 0;
+    g = c;
+    b = x;
   } else if (h >= 180 && h < 240) {
-    r = 0; g = x; b = c;
+    r = 0;
+    g = x;
+    b = c;
   } else if (h >= 240 && h < 300) {
-    r = x; g = 0; b = c;
+    r = x;
+    g = 0;
+    b = c;
   } else if (h >= 300 && h < 360) {
-    r = c; g = 0; b = x;
+    r = c;
+    g = 0;
+    b = x;
   }
   r = Math.abs(Math.round((r + m) * 255));
   g = Math.abs(Math.round((g + m) * 255));

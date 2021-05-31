@@ -1,14 +1,8 @@
-import React, {
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
-import PropTypes from 'prop-types';
-import './styles/LevelBar.css';
+import React, { useEffect, useMemo, useRef, useState } from "react";
+import PropTypes from "prop-types";
+import "./styles/LevelBar.css";
 
 const LevelBar = ({
-  alignRight,
   className,
   handleClassName,
   size,
@@ -16,66 +10,64 @@ const LevelBar = ({
   onChange,
   value,
 }) => {
-  const bar = useRef(null);
-  const [editing, setEditing] = useState(false);
+  const barRef = useRef(null);
+  const editingRef = useRef(false);
 
   useEffect(() => {
-    const mouseDown = event => {
-      if (bar.current.contains(event.target)) {
-        setEditing(true);
-      }
+    const mouseDown = (event) => {
+      editingRef.current = true;
+      mouseMove(event);
     };
-    const mouseMove = event => {
-      if (editing) {
-        // Y coordinate difference as [0,1] (0 is full saturation)
-        const yDifference = event.clientY - bar.current.getBoundingClientRect().y;
+
+    const mouseMove = (event) => {
+      if (editingRef.current) {
+        const yDifference =
+          event.clientX - barRef.current.getBoundingClientRect().x;
         const s = (1 - Math.min(size, Math.max(0, yDifference)) / size) * 100;
         onChange(parseFloat(s.toFixed(2)));
       }
     };
-    const mouseUp = () => setEditing(false);
+    const mouseUp = () => {
+      editingRef.current = false;
+    };
 
-    window.addEventListener('mousedown', mouseDown);
-    window.addEventListener('mousemove', mouseMove);
-    window.addEventListener('mouseup', mouseUp);
+    const target = barRef.current;
+
+    target.addEventListener("mousedown", mouseDown);
+    target.addEventListener("mousemove", mouseMove);
+    window.addEventListener("mouseup", mouseUp);
 
     return () => {
-      window.removeEventListener('mousedown', mouseDown);
-      window.removeEventListener('mousemove', mouseMove);
-      window.removeEventListener('mouseup', mouseUp);
+      target.removeEventListener("mousedown", mouseDown);
+      target.removeEventListener("mousemove", mouseMove);
+      window.removeEventListener("mouseup", mouseUp);
     };
-  }, [editing, onChange, size]);
+  }, [size]);
 
-  const indicatorPosition = useMemo(() => {
-    const top = size * (0.6 * (1 - Math.sin(Math.asin(3 / 4) * (value / 50 - 1))) - 1 / 10);
-    const horizontal = size * 0.65 * (1 - Math.cos(Math.asin(3 / 4) * (value / 50 - 1)));
-    return { top, horizontal };
+  const horizontalX = useMemo(() => {
+    const horizontal = Math.min(size, Math.max(size - (size * value) / 100, 0));
+    return horizontal;
   }, [value, size]);
 
   return (
     <div
-      ref={bar}
+      ref={barRef}
       className={className}
       style={{
-        position: 'absolute',
-        height: size,
-        width: size * 0.281,
-        transform: alignRight ? 'scaleX(-1)' : '',
-        cursor: 'grab',
+        position: "absolute",
+        width: size,
+        height: 10,
+        cursor: "grab",
+        left: size / 10 / 2,
+        bottom: -18,
       }}
     >
-      <div
-        className="barBackground"
-        style={{
-          background,
-          marginTop: size / 20,
-        }}
-      />
+      <div className="barBackground" style={{ background }} />
       <div
         className={handleClassName}
         style={{
-          top: indicatorPosition.top,
-          left: indicatorPosition.horizontal,
+          top: "50%",
+          left: horizontalX,
           width: size * 0.05,
           height: size * 0.05,
           border: `${size * 0.005}px solid black`,
@@ -104,10 +96,10 @@ LevelBar.propTypes = {
 
 LevelBar.defaultProps = {
   alignRight: false,
-  className: 'levelBar',
-  handleClassName: 'defaultHandle',
-  background: 'black',
-  onChange: (() => {}),
+  className: "levelBar",
+  handleClassName: "defaultHandle",
+  background: "black",
+  onChange: () => {},
   value: 100,
 };
 export default LevelBar;

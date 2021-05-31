@@ -42,12 +42,4 @@
   right: 0;
 }
 
-.lightnessBar-level{
-  position: absolute;
-  height: 20px;
-  width: 20px;
-  border-radius: 100%;
-  transform: translate(0, -50%);
-  background-color: black;
-}
 
