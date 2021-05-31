@@ -43,7 +43,7 @@ const ColorWheel = ({ color, size, setColor }) => {
 
     target.addEventListener("mousemove", mouseMove);
     target.addEventListener("touchmove", mouseMove);
-    
+
     window.addEventListener("mouseup", mouseUp);
     window.addEventListener("touchend", mouseUp);
 
@@ -61,15 +61,19 @@ const ColorWheel = ({ color, size, setColor }) => {
 
   const { x, y } = hsToCoordinates(color.h, color.s);
 
+  const levelBarHeight = 10;
+  const levelBarPadding = 10;
+  const wheelSize = size - levelBarHeight * 1 - levelBarPadding * 1;
+
   return (
-    <div className="colorWheel">
-      <div
-        ref={wheelRef}
-        className="wheel"
-        role="button"
-        tabIndex={-5}
-        style={{ margin: `0 ${size / 10}px` }}
-      >
+    <div
+      className="colorWheel"
+      style={{
+        width: wheelSize,
+        height: wheelSize,
+      }}
+    >
+      <div ref={wheelRef} className="wheel" role="button" tabIndex={-5}>
         <div
           className="handle"
           style={{
@@ -82,9 +86,11 @@ const ColorWheel = ({ color, size, setColor }) => {
         />
       </div>
       <LevelBar
+        paddingFromTop={levelBarPadding}
+        height={levelBarHeight}
         alignRight
         className="lightnessBar"
-        size={size}
+        size={wheelSize}
         background={`linear-gradient(to right, white,hsl(${color.h},${color.s}%,50%), black)`}
         onChange={(lightness) =>
           setColor((color) => {

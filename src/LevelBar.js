@@ -10,6 +10,8 @@ const LevelBar = ({
   background,
   onChange,
   value,
+  height,
+  paddingFromTop,
 }) => {
   const barRef = useRef(null);
   const editingRef = useRef(false);
@@ -69,10 +71,9 @@ const LevelBar = ({
       style={{
         position: "absolute",
         width: size,
-        height: 10,
+        height: height,
         cursor: "grab",
-        left: size / 10 / 2,
-        bottom: -18,
+        bottom: -paddingFromTop - height,
       }}
     >
       <div className="barBackground" style={{ background }} />
@@ -81,9 +82,9 @@ const LevelBar = ({
         style={{
           top: "50%",
           left: horizontalX,
-          width: size * 0.05,
-          height: size * 0.05,
-          border: `${size * 0.005}px solid black`,
+          width: height * 0.8,
+          height: height * 0.8,
+          border: `${height * 0.005}px solid black`,
           transform: "translate(-50%, -50%)",
         }}
       />

@@ -65,7 +65,7 @@ const ColorPicker = ({ size, initialColor, onChange, actionRef }) => {
       >
         <ColorWheel
           color={pickedColor.hsl}
-          size={size * (5 / 6)}
+          size={size}
           setColor={setColorFromWheel}
         />
       </div>
