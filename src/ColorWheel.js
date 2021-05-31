@@ -8,13 +8,19 @@ import {
 } from "./helpers/utils";
 import LevelBar from "./LevelBar";
 
-const ColorWheel = ({ color, size, setColor }) => {
+const ColorWheel = ({ color, size, setColor, controlers }) => {
   const wheelRef = useRef(null);
   const editingRef = useRef(false);
 
   const levelBarHeight = 10;
   const levelBarPadding = 10;
-  const wheelSize = size - (levelBarHeight + levelBarPadding) * 2;
+
+  const noOfControlersEnable = Object.keys(controlers).filter(
+    (c) => controlers[c]
+  ).length;
+
+  const wheelSize =
+    size - (levelBarHeight + levelBarPadding) * noOfControlersEnable;
 
   useEffect(() => {
     const mouseDown = (event) => {
@@ -65,8 +71,6 @@ const ColorWheel = ({ color, size, setColor }) => {
 
   const { x, y } = hsToCoordinates(color.h, color.s);
 
-
-
   return (
     <div
       className="colorWheel"
@@ -87,33 +91,40 @@ const ColorWheel = ({ color, size, setColor }) => {
           }}
         />
       </div>
-      <LevelBar
-        paddingFromTop={levelBarPadding}
-        height={levelBarHeight}
-        className="lightnessBar"
-        size={wheelSize}
-        background={`linear-gradient(to right, white,hsl(${color.h},${color.s}%,50%), black)`}
-        onChange={(lightness) =>
-          setColor((color) => {
-            return { ...color, l: lightness };
-          })
-        }
-        value={color.l}
-      />
+      {controlers.lightnessControler && (
+        <LevelBar
+          paddingFromTop={levelBarPadding}
+          height={levelBarHeight}
+          className="lightnessBar"
+          size={wheelSize}
+          background={`linear-gradient(to right, white,hsl(${color.h},${color.s}%,50%), black)`}
+          onChange={(lightness) =>
+            setColor((color) => {
+              return { ...color, l: lightness };
+            })
+          }
+          value={color.l}
+        />
+      )}
 
-      <LevelBar
-        paddingFromTop={levelBarPadding * 2 + levelBarHeight}
-        height={levelBarHeight}
-        className="saturationBar"
-        size={wheelSize}
-        background={`linear-gradient(to right, hsl(${color.h},100%,${color.l}%),hsl(${color.h},0%,${color.l}%))`}
-        onChange={(saturation) =>
-          setColor((color) => {
-            return { ...color, s: saturation };
-          })
-        }
-        value={color.s}
-      />
+      {controlers.saturationControler && (
+        <LevelBar
+          paddingFromTop={
+            levelBarPadding * noOfControlersEnable +
+            levelBarHeight * (noOfControlersEnable - 1)
+          }
+          height={levelBarHeight}
+          className="saturationBar"
+          size={wheelSize}
+          background={`linear-gradient(to right, hsl(${color.h},100%,${color.l}%),hsl(${color.h},0%,${color.l}%))`}
+          onChange={(saturation) =>
+            setColor((color) => {
+              return { ...color, s: saturation };
+            })
+          }
+          value={color.s}
+        />
+      )}
     </div>
   );
 };
@@ -124,6 +135,10 @@ ColorWheel.propTypes = {
     h: PropTypes.number,
     s: PropTypes.number,
     l: PropTypes.number,
+  }),
+  controlers: PropTypes.shape({
+    saturationControler: PropTypes.bool,
+    lightnessControler: PropTypes.bool,
   }),
   /** Size of color wheel */
   size: PropTypes.number.isRequired,
@@ -137,5 +152,11 @@ ColorWheel.defaultProps = {
     s: 100,
     l: 50,
   },
+  controlers: {
+    saturationControler: true,
+    lightnessControler: true,
+  },
+  size: 100,
+  setColor: () => {},
 };
 export default ColorWheel;
