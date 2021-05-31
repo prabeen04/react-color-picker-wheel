@@ -29,7 +29,12 @@ const ColorPicker = ({ size, initialColor, onChange, actionRef }) => {
   if (actionRef) {
     actionRef.current = {
       updateColor: function updateColor(color) {
-        setPickedColor(convertToStdColorFormat(color));
+        try {
+          const formatedColor = convertToStdColorFormat(color);
+          setPickedColor(formatedColor);
+        } catch (error) {
+          console.error(error);
+        }
       },
     };
   }
