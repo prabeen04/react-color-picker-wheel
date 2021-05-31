@@ -93,8 +93,6 @@ const LevelBar = ({
 };
 
 LevelBar.propTypes = {
-  /** Whether bar is aligned to right */
-  alignRight: PropTypes.bool,
   /** Css class name for outer div */
   className: PropTypes.string,
   /** Css class name for handle */
@@ -110,7 +108,6 @@ LevelBar.propTypes = {
 };
 
 LevelBar.defaultProps = {
-  alignRight: false,
   className: "levelBar",
   handleClassName: "defaultHandle",
   background: "black",

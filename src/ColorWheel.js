@@ -12,6 +12,10 @@ const ColorWheel = ({ color, size, setColor }) => {
   const wheelRef = useRef(null);
   const editingRef = useRef(false);
 
+  const levelBarHeight = 10;
+  const levelBarPadding = 10;
+  const wheelSize = size - (levelBarHeight + levelBarPadding) * 2;
+
   useEffect(() => {
     const mouseDown = (event) => {
       if (wheelRef.current.contains(event.target)) {
@@ -30,8 +34,8 @@ const ColorWheel = ({ color, size, setColor }) => {
 
       const cord = getXYCordFromTouch(event);
       const color = coordinatesToHS(
-        (cord.clientX - wheelRef.current.getBoundingClientRect().x) / size,
-        (cord.clientY - wheelRef.current.getBoundingClientRect().y) / size
+        (cord.clientX - wheelRef.current.getBoundingClientRect().x) / wheelSize,
+        (cord.clientY - wheelRef.current.getBoundingClientRect().y) / wheelSize
       );
       setColor(color);
     };
@@ -57,13 +61,11 @@ const ColorWheel = ({ color, size, setColor }) => {
       window.removeEventListener("mouseup", mouseUp);
       window.removeEventListener("touchend", mouseUp);
     };
-  }, [size]);
+  }, [wheelSize]);
 
   const { x, y } = hsToCoordinates(color.h, color.s);
 
-  const levelBarHeight = 10;
-  const levelBarPadding = 10;
-  const wheelSize = size - levelBarHeight * 1 - levelBarPadding * 1;
+
 
   return (
     <div
@@ -77,18 +79,17 @@ const ColorWheel = ({ color, size, setColor }) => {
         <div
           className="handle"
           style={{
-            top: y * size,
-            left: x * size,
-            width: size / 15,
-            height: size / 15,
-            border: `${size / 150}px solid black`,
+            top: y * wheelSize,
+            left: x * wheelSize,
+            width: wheelSize / 15,
+            height: wheelSize / 15,
+            border: `${wheelSize / 150}px solid black`,
           }}
         />
       </div>
       <LevelBar
         paddingFromTop={levelBarPadding}
         height={levelBarHeight}
-        alignRight
         className="lightnessBar"
         size={wheelSize}
         background={`linear-gradient(to right, white,hsl(${color.h},${color.s}%,50%), black)`}
@@ -98,6 +99,20 @@ const ColorWheel = ({ color, size, setColor }) => {
           })
         }
         value={color.l}
+      />
+
+      <LevelBar
+        paddingFromTop={levelBarPadding * 2 + levelBarHeight}
+        height={levelBarHeight}
+        className="saturationBar"
+        size={wheelSize}
+        background={`linear-gradient(to right, hsl(${color.h},100%,${color.l}%),hsl(${color.h},0%,${color.l}%))`}
+        onChange={(saturation) =>
+          setColor((color) => {
+            return { ...color, s: saturation };
+          })
+        }
+        value={color.s}
       />
     </div>
   );

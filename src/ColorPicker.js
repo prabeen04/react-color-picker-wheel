@@ -92,12 +92,14 @@ ColorPicker.propTypes = {
   ]),
   /** Function which will be called when color change occurs. Parameter is a hsl object */
   onChange: PropTypes.func,
+  actionRef: PropTypes.shape({ current: PropTypes.instanceOf(Element) }),
 };
 
 ColorPicker.defaultProps = {
   size: 100,
   initialColor: "#FF0000",
   onChange: () => {},
+  actionRef: null,
 };
 
 export default ColorPicker;
