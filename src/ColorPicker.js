@@ -10,10 +10,20 @@ const defaultColor = {
   hsl: { h: 0, s: 100, l: 50 },
 };
 
-const ColorPicker = ({ size, initialColor, onChange, actionRef, controlers }) => {
+const ColorPicker = ({
+  size,
+  initialColor,
+  onChange,
+  actionRef,
+  controlers,
+}) => {
   const [pickedColor, setPickedColor] = useState(defaultColor);
-  const pickedColorRef = useRef(pickedColor);
+
+  const pickedColorRef = useRef();
   pickedColorRef.current = pickedColor;
+
+  const onChangeRef = useRef();
+  onChangeRef.current = onChange;
 
   useEffect(() => {
     initialColor = initialColor || defaultColor.hex;
@@ -56,7 +66,10 @@ const ColorPicker = ({ size, initialColor, onChange, actionRef, controlers }) =>
     const rgb = hslToRgb(h, s, l);
     const hex = rgbToHex(rgb.r, rgb.g, rgb.b);
     setPickedColor({ hex, rgb, hsl: { h, s, l } });
-    onChange({ hex, rgb, hsl: { h, s, l } });
+
+    if (onChangeRef.current) {
+      onChangeRef.current({ hex, rgb, hsl: { h, s, l } });
+    }
   }, []);
 
   return (
