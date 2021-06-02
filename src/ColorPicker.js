@@ -10,7 +10,7 @@ const defaultColor = {
   hsl: { h: 0, s: 100, l: 50 },
 };
 
-const ColorPicker = ({ size, initialColor, onChange, actionRef }) => {
+const ColorPicker = ({ size, initialColor, onChange, actionRef, controlers }) => {
   const [pickedColor, setPickedColor] = useState(defaultColor);
   const pickedColorRef = useRef(pickedColor);
   pickedColorRef.current = pickedColor;
@@ -72,6 +72,7 @@ const ColorPicker = ({ size, initialColor, onChange, actionRef }) => {
           color={pickedColor.hsl}
           size={size}
           setColor={setColorFromWheel}
+          controlers={controlers}
         />
       </div>
     </div>
