@@ -48,14 +48,14 @@ const ColorWheel = ({ color, size, setColor, controlers }) => {
 
     const target = wheelRef.current;
 
-    target.addEventListener("mousedown", mouseDown);
-    target.addEventListener("touchstart", mouseDown);
+    target.addEventListener("mousedown", mouseDown, { passive: false });
+    target.addEventListener("touchstart", mouseDown, { passive: false });
 
-    target.addEventListener("mousemove", mouseMove);
-    target.addEventListener("touchmove", mouseMove);
+    target.addEventListener("mousemove", mouseMove, { passive: false });
+    target.addEventListener("touchmove", mouseMove, { passive: false });
 
-    window.addEventListener("mouseup", mouseUp);
-    window.addEventListener("touchend", mouseUp);
+    window.addEventListener("mouseup", mouseUp, { passive: false });
+    window.addEventListener("touchend", mouseUp, { passive: false });
 
     return () => {
       target.removeEventListener("mousedown", mouseDown);
